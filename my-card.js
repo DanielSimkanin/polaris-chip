@@ -1,11 +1,5 @@
 import { LitElement, html, css } from 'lit';
 
-/**
- * Now it's your turn. Here's what we need to try and do:
- * 1. Get you HTML from your card working in here 
- * 2. Get your CSS rescoped as needed to work here
- */
-
 export class MyCard extends LitElement {
 
   static get tag() {
@@ -14,26 +8,27 @@ export class MyCard extends LitElement {
 
   constructor() {
     super();
-    this.title = "College of IST";
-    this.img = "https://ist.psu.edu/assets/uploads/hero-images/westgate.jpg";
-    this.backgroundColor = "#27C5F5";
-    this.textColor = "#000000";
-    this.buttonColor = "#ABA9A9";
-    this.list = "Majors Offered:";
+    this.title = "Default Title";
+    this.img = "https://via.placeholder.com/400x250.png?text=Default+Image";
+    this.backgroundColor = "#000000";
+    this.fancy = false;
   }
 
   static get styles() {
     return css`
       :host { 
-        display: block;
-      }
-        .card {
+        display: inline-block;
+        }
+.card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   border-radius: 10px;
-  width: 400px; height:635px;
-  background-color: #27C5F5;
+  width: 400px;
+  display: inline-block; 
+  text-align: center;
   padding: 8px;
   margin: 8px;
+  height: 560px;       
+  vertical-align: top;
 }
 
 img {
@@ -47,53 +42,82 @@ img {
 }
 
 .body {
-  text-align: left;
+  text-align: center;
+  text-family: Times New Roman;
+  padding: 2px 16px;
 }
 
 .button {
   display: inline-block;
   margin-bottom: 20px;
   padding: 10px 18px;
-  background-color: #ABA9A9;
+  background-color: #FFFFFF;
   color: #000000;
   border-radius: 12px;
   font-weight: bold;
   text-align: center;
 }
+  
+details[open] summary {
+  font-weight: bold;
+}
+  details summary {
+  text-align: left;
+  font-size: 20px;
+  padding: 8px 0;
+}
+  details div {
+  border: 2px solid black;
+  text-align: left;
+  padding: 8px;
+  height: 70px;
+  overflow: auto;
+  text-indent: 20px;
+}
+  :host([fancy]) .card {
+      border: 4px solid black;
+      box-shadow: 5px 5px 5px black;
+    }
     `;
   }
 
+  openChanged(e) {
+  if (e.target.getAttribute('open') !== null) {
+    this.fancy = true;
+  } else {
+    this.fancy = false;
+  }
+}
+
   render() {
-    return html`<div class="card">
-
-    <img src = "${this.img}" alt= "IST">
-
-  <div class="header">
-    <h1><b>${this.title}</b></h1>
+    return html`
+  <div 
+    class="card"
+    style="background-color: ${this.backgroundColor};"
+    >
+    <img src = "${this.img}" alt="${this.title}">
+      <div class="header">
+        <h1><b>${this.title}</b></h1>
   </div>
 
   <div class="body">
-    <p><b>Majors Offered:</b></p>
-      <ul>
-        <li>Artificial Intelligence Methods and Applications</li>
-        <li>Cybersecuirty Analytics and Operations</li>
-        <li>Data Sciences</li>
-        <li>Enterprise Technology Integration</li>
-        <li>Human-Centered Design and Development</li>
-        <li>Information Sciences and Technology</li>
-        <li>Information Technology Ethics and Compliance</li>
-        <li>Secuirty Risk Analysis</li>
-    </ul>
+    <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+  <summary>Description</summary>
+  <div>
+    <slot>${this.description}</slot>
+  </div>
+</details>
     
     <a 
     href="https://hax.psu.edu/" 
     target="_blank" 
     class="button"
     >
-      Details
-    </a>
+        Details
+      </a>
+    </div>
   </div>
-  </div>`;
+  `;
   }
 
   static get properties() {
@@ -101,9 +125,7 @@ img {
       title: { type: String },
       img: { type: String },
       backgroundColor: { type: String },
-      textColor: { type: String },
-      buttonColor: { type: String },
-      list: { type: String },
+      fancy: { type: Boolean, reflect: true }
     };
   }
 }
